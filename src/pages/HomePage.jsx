@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoginModal from "../components/LoginModal";
 import bgImage from "../assets/home-bg.jpg"; // import your background image
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
 
     const scrollToSection = (sectionId) => {
         document.getElementById(sectionId).scrollIntoView({ 
@@ -17,6 +19,10 @@ const HomePage = () => {
     };
 
     const handleStartJourney = () => {
+        setShowModal(true);
+    };
+
+    const handleLoginSuccess = () => {
         navigate("/dashboard");
     };
 
@@ -33,6 +39,11 @@ const HomePage = () => {
 
     return (
         <>
+            <LoginModal 
+                isOpen={showModal} 
+                onClose={() => setShowModal(false)}
+                onSuccess={handleLoginSuccess}
+            />
             {/* -------- HERO SECTION -------- */}
         <div
             className="min-h-screen bg-cover bg-center flex flex-col items-center justify-center px-6 relative text-white"

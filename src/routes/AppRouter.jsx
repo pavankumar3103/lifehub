@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "../components/Layout";
+import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../pages/HomePage";
 import Dashboard from "../pages/Dashboard";
 import Habits from "../pages/Habits";
@@ -15,36 +16,48 @@ export default function AppRouter() {
                 {/* Landing page - no layout */}
                 <Route path="/" element={<HomePage />} />
                 
-                {/* App pages - with layout */}
+                {/* App pages - with layout and protection */}
                 <Route path="/dashboard" element={
-                    <Layout>
-                        <Dashboard />
-                    </Layout>
+                    <ProtectedRoute>
+                        <Layout>
+                            <Dashboard />
+                        </Layout>
+                    </ProtectedRoute>
                 } />
                 <Route path="/habits" element={
-                    <Layout>
-                        <Habits />
-                    </Layout>
+                    <ProtectedRoute>
+                        <Layout>
+                            <Habits />
+                        </Layout>
+                    </ProtectedRoute>
                 } />
                 <Route path="/meals" element={
-                    <Layout>
-                        <Meals />
-                    </Layout>
+                    <ProtectedRoute>
+                        <Layout>
+                            <Meals />
+                        </Layout>
+                    </ProtectedRoute>
                 } />
                 <Route path="/workouts" element={
-                    <Layout>
-                        <Workouts />
-                    </Layout>
+                    <ProtectedRoute>
+                        <Layout>
+                            <Workouts />
+                        </Layout>
+                    </ProtectedRoute>
                 } />
                 <Route path="/mood" element={
-                    <Layout>
-                        <Mood />
-                    </Layout>
+                    <ProtectedRoute>
+                        <Layout>
+                            <Mood />
+                        </Layout>
+                    </ProtectedRoute>
                 } />
                 <Route path="/profile" element={
-                    <Layout>
-                        <Profile />
-                    </Layout>
+                    <ProtectedRoute>
+                        <Layout>
+                            <Profile />
+                        </Layout>
+                    </ProtectedRoute>
                 } />
             </Routes>
         </Router>
