@@ -1,0 +1,493 @@
+{
+	"info": {
+		"_postman_id": "lifehub-api-collection",
+		"name": "LifeHub API Collection",
+		"description": "Complete API collection for LifeHub lifestyle management platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.token) {",
+									"        var token = jsonData.data.token;",
+									"        // Try to save to environment first, then collection variable",
+									"        if (pm.environment) {",
+									"            pm.environment.set(\"auth_token\", token);",
+									"        }",
+									"        // Also save to collection variable as fallback",
+									"        pm.collectionVariables.set(\"auth_token\", token);",
+									"        console.log(\"Token saved to auth_token variable:\", token.substring(0, 20) + \"...\");",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Demo User\",\n    \"email\": \"demo@lifehub.com\",\n    \"password\": \"demo123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.token) {",
+									"        var token = jsonData.data.token;",
+									"        // Try to save to environment first, then collection variable",
+									"        if (pm.environment) {",
+									"            pm.environment.set(\"auth_token\", token);",
+									"        }",
+									"        // Also save to collection variable as fallback",
+									"        pm.collectionVariables.set(\"auth_token\", token);",
+									"        console.log(\"Token saved to auth_token variable:\", token.substring(0, 20) + \"...\");",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"demo@lifehub.com\",\n    \"password\": \"demo123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login and get JWT token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "me"]
+						},
+						"description": "Get current authenticated user profile"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "Habits",
+			"item": [
+				{
+					"name": "Get All Habits",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/habits",
+							"host": ["{{base_url}}"],
+							"path": ["api", "habits"]
+						},
+						"description": "Get all habits for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Habit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"habitName\": \"Drink 2L water daily\",\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/habits",
+							"host": ["{{base_url}}"],
+							"path": ["api", "habits"]
+						},
+						"description": "Create a new habit"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Habit by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/habits/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "habits", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get a specific habit by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Habit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"habitName\": \"Drink 3L water daily\",\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/habits/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "habits", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Update an existing habit"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Habit",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/habits/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "habits", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Delete a habit"
+					},
+					"response": []
+				}
+			],
+			"description": "Habit management endpoints"
+		},
+		{
+			"name": "Meals",
+			"item": [
+				{
+					"name": "Get All Meals",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/meals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "meals"]
+						},
+						"description": "Get all meals for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Meal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dishName\": \"Grilled Chicken Salad\",\n    \"quantityGrams\": 350,\n    \"mealDate\": \"2025-01-20\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/meals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "meals"]
+						},
+						"description": "Create a new meal entry"
+					},
+					"response": []
+				}
+			],
+			"description": "Meal tracking endpoints"
+		},
+		{
+			"name": "Workouts",
+			"item": [
+				{
+					"name": "Get All Workouts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workouts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workouts"]
+						},
+						"description": "Get all workouts for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Workout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"exerciseName\": \"5km run\",\n    \"durationMinutes\": 30,\n    \"workoutDate\": \"2025-01-20\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workouts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workouts"]
+						},
+						"description": "Create a new workout entry"
+					},
+					"response": []
+				}
+			],
+			"description": "Workout tracking endpoints"
+		},
+		{
+			"name": "Mood Entries",
+			"item": [
+				{
+					"name": "Get All Mood Entries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mood-entries",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mood-entries"]
+						},
+						"description": "Get all mood entries for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Mood Entry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"moodValue\": \"😊\",\n    \"moodDate\": \"2025-01-20\",\n    \"notes\": \"Feeling great today!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mood-entries",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mood-entries"]
+						},
+						"description": "Create a new mood entry"
+					},
+					"response": []
+				}
+			],
+			"description": "Mood tracking endpoints"
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Get Habit Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/habits",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "habits"]
+						},
+						"description": "Get detailed analytics about user habits"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/recommendations",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "recommendations"]
+						},
+						"description": "Get personalized habit recommendations"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Analytics Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/summary",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "summary"]
+						},
+						"description": "Get a summary of analytics and recommendations"
+					},
+					"response": []
+				}
+			],
+			"description": "Analytics and insights endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
