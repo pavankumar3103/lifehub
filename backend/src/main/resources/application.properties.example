@@ -1,0 +1,73 @@
+# =============================================================================
+# LifeHub Backend - Application Configuration Example
+# =============================================================================
+# Copy this file to application.properties and fill in your values.
+# NEVER commit application.properties to version control.
+# =============================================================================
+
+# Server Configuration
+server.port=8080
+spring.application.name=lifehub-backend
+
+# =============================================================================
+# Database Configuration (PostgreSQL)
+# =============================================================================
+# Create a PostgreSQL database and user before running:
+#   CREATE DATABASE lifehub_db;
+#   CREATE USER lifehub_user WITH PASSWORD 'your_password';
+#   GRANT ALL PRIVILEGES ON DATABASE lifehub_db TO lifehub_user;
+spring.datasource.url=jdbc:postgresql://localhost:5432/lifehub_db
+spring.datasource.username=lifehub_user
+spring.datasource.password=your_db_password_here
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# =============================================================================
+# JPA / Hibernate Configuration
+# =============================================================================
+# Use 'update' for development, 'validate' for production
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
+
+# =============================================================================
+# JWT Configuration
+# =============================================================================
+# Generate a secure secret: openssl rand -base64 96
+# Must be at least 64 characters for HS512
+jwt.secret=replace-this-with-a-secure-random-string-at-least-64-characters-long-generated-via-openssl
+jwt.expiration=86400000
+jwt.refresh-expiration=604800000
+
+# =============================================================================
+# CORS Configuration
+# =============================================================================
+cors.allowed-origins=http://localhost:5173,http://localhost:3000
+
+# =============================================================================
+# Redis Configuration
+# =============================================================================
+# Redis is used for caching. If Redis is not running, comment out
+# spring.cache.type=redis below and the app will use NoOp cache instead.
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+spring.data.redis.password=
+spring.data.redis.timeout=2000ms
+spring.data.redis.lettuce.pool.enabled=false
+spring.data.redis.repositories.enabled=false
+spring.cache.type=redis
+spring.cache.redis.time-to-live=1800000
+
+# =============================================================================
+# Jackson Configuration
+# =============================================================================
+spring.jackson.serialization.write-dates-as-timestamps=false
+spring.jackson.deserialization.fail-on-unknown-properties=false
+spring.jackson.serialization.write-date-timestamps-as-nanoseconds=false
+spring.jackson.serialization.write-durations-as-timestamps=false
+
+# =============================================================================
+# Logging (reduce verbosity in production)
+# =============================================================================
+logging.level.com.lifehub=DEBUG
+logging.level.org.springframework.security=DEBUG
+logging.level.org.springframework.cache=DEBUG

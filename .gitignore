@@ -26,7 +26,6 @@ backend/mvnw.cmd
 # IDE directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea/
 *.iml
 *.swp
 *.swo
@@ -82,3 +81,7 @@ WAA Project Brief*.pdf
 # Maven
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+
+backend/src/main/resources/application.properties
+backend/src/main/resources/application-prod.properties
+.env
