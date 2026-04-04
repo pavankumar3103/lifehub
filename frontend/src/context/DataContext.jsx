@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // src/context/DataContext.jsx
 import { createContext, useEffect, useState, useCallback } from 'react';
 import { habitsAPI, mealsAPI, moodAPI, workoutsAPI } from '../services/api';

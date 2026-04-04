@@ -1,9 +1,5 @@
 # PostgreSQL Setup Guide for LifeHub
 
-## ✅ Yes, PostgreSQL is a Great Choice!
-
-**Absolutely go ahead with PostgreSQL!** Here's why it's an excellent choice:
-
 ### **Advantages of PostgreSQL:**
 1. ✅ **Open Source** - Free and community-driven
 2. ✅ **Highly Reliable** - ACID compliant, robust transaction support

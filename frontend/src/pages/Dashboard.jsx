@@ -206,12 +206,6 @@ export default function Dashboard() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {recentItems.map((item, idx) => {
-                            const colorClasses = {
-                                purple: "from-purple-500/20 to-pink-500/20 border-purple-500/30",
-                                orange: "from-orange-500/20 to-red-500/20 border-orange-500/30",
-                                green: "from-green-500/20 to-emerald-500/20 border-green-500/30",
-                                yellow: "from-yellow-500/20 to-amber-500/20 border-yellow-500/30",
-                            };
 
                             const name = item.habitName || item.dishName || item.exerciseName || item.moodValue || "Unknown";
                             const date = new Date(item.createdAt || item.mealDate || item.workoutDate || item.moodDate || Date.now());

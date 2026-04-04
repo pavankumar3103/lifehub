@@ -3,7 +3,7 @@ FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-COPY Dockerfile .
+COPY . .
 RUN npm run build
 
 # ── Runtime stage (nginx) ─────────────────────────────────────────────────────

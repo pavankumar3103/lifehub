@@ -1,10 +1,8 @@
 // src/pages/Habits.jsx
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useData } from '../context/useData';
-import { useAuth } from '../context/AuthContext';
 
 export default function Habits() {
-  const { user } = useAuth();
   const {
     habits,
     loading,
@@ -12,7 +10,6 @@ export default function Habits() {
     addHabit,
     updateHabit,
     deleteHabit,
-    refreshData,
   } = useData();
 
   const [formOpen, setFormOpen] = useState(false);

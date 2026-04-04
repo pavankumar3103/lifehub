@@ -22,9 +22,8 @@ import { useData } from '../context/useData';
 const COLORS = ['#14b8a6', '#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
 
 export default function Analytics() {
-  const { habits = [], meals = [], workouts = [], moodEntries = [] } = useData();
+  const { meals = [], workouts = [], moodEntries = [] } = useData();
   const [analytics, setAnalytics] = useState(null);
-  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -36,7 +35,7 @@ export default function Analytics() {
     try {
       setLoading(true);
       setError(null);
-      const [analyticsRes, summaryRes] = await Promise.all([
+      const [analyticsRes] = await Promise.all([
         getHabitAnalytics(),
         getAnalyticsSummary(),
       ]);
@@ -44,9 +43,7 @@ export default function Analytics() {
       if (analyticsRes.success) {
         setAnalytics(analyticsRes.data);
       }
-      if (summaryRes.success) {
-        setSummary(summaryRes.data);
-      }
+      // summaryRes currently unused in UI; ignore for now
     } catch (err) {
       console.error('Failed to fetch analytics:', err);
       setError('Failed to load analytics');

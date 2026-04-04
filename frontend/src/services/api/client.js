@@ -1,7 +1,7 @@
 // src/services/api/client.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -50,14 +50,6 @@ api.interceptors.response.use(
       // Don't clear on first 401 - might be a temporary server issue
       const errorMessage = error.response?.data?.message || '';
       const errorData = error.response?.data || {};
-      
-      // Check if it's a clear authentication failure
-      const isAuthFailure = errorMessage.toLowerCase().includes('expired') || 
-                           errorMessage.toLowerCase().includes('invalid') || 
-                           errorMessage.toLowerCase().includes('jwt') ||
-                           errorMessage.toLowerCase().includes('unauthorized') ||
-                           errorMessage.toLowerCase().includes('forbidden') ||
-                           error.response?.status === 403; // 403 is more definitive than 401
       
       // Don't automatically clear token on 401/403 - let the user try to log in again
       // Only clear if we get a specific error message indicating the token is invalid
