@@ -88,7 +88,7 @@ export default function Dashboard() {
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-600/90 to-pink-600/90"></div>
                         <div className="relative z-10">
                             <div className="flex items-center justify-between mb-4">
-                                <div className="w-16 h-16 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30"></div>
+                                <span className="text-5xl">🧘‍♂️</span>
                                 <div className="text-white/50 group-hover:text-white transition-colors">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -116,7 +116,7 @@ export default function Dashboard() {
                         <div className="absolute inset-0 bg-gradient-to-br from-orange-600/90 to-red-600/90"></div>
                         <div className="relative z-10">
                             <div className="flex items-center justify-between mb-4">
-                                <div className="w-16 h-16 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30"></div>
+                                <span className="text-5xl">🍽️</span>
                                 <div className="text-white/50 group-hover:text-white transition-colors">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -144,7 +144,7 @@ export default function Dashboard() {
                         <div className="absolute inset-0 bg-gradient-to-br from-green-600/90 to-emerald-600/90"></div>
                         <div className="relative z-10">
                             <div className="flex items-center justify-between mb-4">
-                                <div className="w-16 h-16 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30"></div>
+                                <span className="text-5xl">💪</span>
                                 <div className="text-white/50 group-hover:text-white transition-colors">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -172,7 +172,7 @@ export default function Dashboard() {
                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/90 to-amber-600/90"></div>
                         <div className="relative z-10">
                             <div className="flex items-center justify-between mb-4">
-                                <div className="w-16 h-16 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30"></div>
+                                <span className="text-5xl">😌</span>
                                 <div className="text-white/50 group-hover:text-white transition-colors">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -255,7 +255,9 @@ export default function Dashboard() {
                         }}
                     ></div>
                     <div className="relative z-10">
-                        <div className="w-12 h-12 mb-3 rounded-lg bg-purple-500/20 backdrop-blur-sm border border-purple-500/30"></div>
+                        <div className="mb-3">
+                            <span className="text-4xl">🧘‍♂️</span>
+                        </div>
                         <div className="text-white font-semibold mb-1 group-hover:text-teal-400 transition-colors">Add Habit</div>
                         <div className="text-slate-400 text-sm">Track a new habit</div>
                     </div>
@@ -268,7 +270,9 @@ export default function Dashboard() {
                         }}
                     ></div>
                     <div className="relative z-10">
-                        <div className="w-12 h-12 mb-3 rounded-lg bg-orange-500/20 backdrop-blur-sm border border-orange-500/30"></div>
+                        <div className="mb-3">
+                            <span className="text-4xl">🍽️</span>
+                        </div>
                         <div className="text-white font-semibold mb-1 group-hover:text-teal-400 transition-colors">Log Meal</div>
                         <div className="text-slate-400 text-sm">Record what you ate</div>
                     </div>
@@ -281,7 +285,9 @@ export default function Dashboard() {
                         }}
                     ></div>
                     <div className="relative z-10">
-                        <div className="w-12 h-12 mb-3 rounded-lg bg-green-500/20 backdrop-blur-sm border border-green-500/30"></div>
+                        <div className="mb-3">
+                            <span className="text-4xl">💪</span>
+                        </div>
                         <div className="text-white font-semibold mb-1 group-hover:text-teal-400 transition-colors">Log Workout</div>
                         <div className="text-slate-400 text-sm">Track your exercise</div>
                     </div>
@@ -294,7 +300,9 @@ export default function Dashboard() {
                         }}
                     ></div>
                     <div className="relative z-10">
-                        <div className="w-12 h-12 mb-3 rounded-lg bg-yellow-500/20 backdrop-blur-sm border border-yellow-500/30"></div>
+                        <div className="mb-3">
+                            <span className="text-4xl">😌</span>
+                        </div>
                         <div className="text-white font-semibold mb-1 group-hover:text-teal-400 transition-colors">Log Mood</div>
                         <div className="text-slate-400 text-sm">How are you feeling?</div>
                     </div>
