@@ -7,6 +7,7 @@ import com.lifehub.service.HabitService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,39 @@ public class HabitController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("Failed to fetch habits: " + e.getMessage()));
         }
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    public ResponseEntity<String> exportHabits(Authentication authentication) {
+        try {
+            Long userId = getUserId(authentication);
+            List<HabitResponse> habits = habitService.getUserHabits(userId);
+
+            StringBuilder csv = new StringBuilder();
+            csv.append("Id,Habit Name,Active,Created At\n");
+            for (HabitResponse habit : habits) {
+                csv.append(habit.getId() != null ? habit.getId() : "").append(',')
+                        .append(escapeCsv(habit.getHabitName())).append(',')
+                        .append(habit.getIsActive() != null && habit.getIsActive() ? "Yes" : "No").append(',')
+                        .append(habit.getCreatedAt() != null ? habit.getCreatedAt().toString() : "").append('\n');
+            }
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=habits.csv")
+                    .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+                    .body(csv.toString());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to export habits: " + e.getMessage());
+        }
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) return "";
+        String escaped = value.replace("\"", "\"\"");
+        return escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")
+                ? "\"" + escaped + "\""
+                : escaped;
     }
 
     @GetMapping("/{id}")

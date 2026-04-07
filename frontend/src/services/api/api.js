@@ -51,6 +51,7 @@ export const habitsAPI = {
     createHabit: (payload) => api.post('/habits', payload),
     updateHabit: (id, payload) => api.put(`/habits/${id}`, payload),
     deleteHabit: (id) => api.delete(`/habits/${id}`),
+    exportHabits: () => api.get('/habits/export', { responseType: 'blob', headers: { Accept: 'text/csv' } }),
 };
 
 export const mealsAPI = {
@@ -58,6 +59,7 @@ export const mealsAPI = {
     createMeal: (payload) => api.post('/meals', payload),
     updateMeal: (id, payload) => api.put(`/meals/${id}`, payload),
     deleteMeal: (id) => api.delete(`/meals/${id}`),
+    exportMeals: () => api.get('/meals/export', { responseType: 'blob', headers: { Accept: 'text/csv' } }),
 };
 
 export const workoutsAPI = {
@@ -65,6 +67,7 @@ export const workoutsAPI = {
     createWorkout: (payload) => api.post('/workouts', payload),
     updateWorkout: (id, payload) => api.put(`/workouts/${id}`, payload),
     deleteWorkout: (id) => api.delete(`/workouts/${id}`),
+    exportWorkouts: () => api.get('/workouts/export', { responseType: 'blob', headers: { Accept: 'text/csv' } }),
 };
 
 export const moodAPI = {

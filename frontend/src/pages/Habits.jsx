@@ -1,6 +1,7 @@
 // src/pages/Habits.jsx
 import { useMemo, useState } from 'react';
 import { useData } from '../context/useData';
+import { habitsAPI } from '../services/api';
 
 export default function Habits() {
   const {
@@ -16,6 +17,7 @@ export default function Habits() {
   const [currentHabit, setCurrentHabit] = useState(null);
   const [habitName, setHabitName] = useState('');
   const [formError, setFormError] = useState('');
+  const [exportError, setExportError] = useState('');
 
   const sortedHabits = useMemo(() => {
     return [...habits].sort((a, b) => {
@@ -40,6 +42,29 @@ export default function Habits() {
     setHabitName(habit.habitName ?? habit.name ?? '');
     setFormError('');
     setFormOpen(true);
+  };
+
+  const downloadCsv = async (apiCall, filename) => {
+    try {
+      const response = await apiCall();
+      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      setExportError('');
+    } catch (err) {
+      console.error('Failed to export habits', err);
+      setExportError('Unable to export habits. Please try again.');
+    }
+  };
+
+  const handleExport = async () => {
+    await downloadCsv(habitsAPI.exportHabits, 'habits.csv');
   };
 
   const closeForm = () => {
@@ -114,16 +139,29 @@ export default function Habits() {
               {errorMessage}
             </div>
           )}
+          {exportError && (
+            <div className="mt-3 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+              {exportError}
+            </div>
+          )}
         </div>
-        <button
-          onClick={openCreateForm}
-          className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add Habit
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleExport}
+            className="px-5 py-3 bg-slate-700/70 hover:bg-slate-600 text-white rounded-xl font-semibold transition-all duration-300"
+          >
+            Export
+          </button>
+          <button
+            onClick={openCreateForm}
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Habit
+          </button>
+        </div>
       </div>
 
       {sortedHabits.length === 0 ? (
