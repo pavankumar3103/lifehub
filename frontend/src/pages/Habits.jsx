@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import { useData } from '../context/useData';
 import { habitsAPI } from '../services/api';
+import { downloadCsv } from '../utils/exportUtils';
 
 export default function Habits() {
   const {
@@ -44,27 +45,13 @@ export default function Habits() {
     setFormOpen(true);
   };
 
-  const downloadCsv = async (apiCall, filename) => {
-    try {
-      const response = await apiCall();
-      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = filename;
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-      setExportError('');
-    } catch (err) {
-      console.error('Failed to export habits', err);
-      setExportError('Unable to export habits. Please try again.');
-    }
-  };
-
   const handleExport = async () => {
-    await downloadCsv(habitsAPI.exportHabits, 'habits.csv');
+    downloadCsv(
+      habitsAPI.exportHabits,
+      'habits.csv',
+      () => setExportError(''),
+      (error) => setExportError(error)
+    );
   };
 
   const closeForm = () => {

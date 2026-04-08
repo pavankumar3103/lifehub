@@ -4,6 +4,7 @@ import com.lifehub.dto.*;
 import com.lifehub.model.User;
 import com.lifehub.repository.UserRepository;
 import com.lifehub.service.MealService;
+import com.lifehub.util.CsvUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,7 +76,7 @@ public class MealController {
             csv.append("Id,Dish Name,Quantity Grams,Meal Date\n");
             for (MealResponse meal : meals) {
                 csv.append(meal.getId() != null ? meal.getId() : "").append(',')
-                        .append(escapeCsv(meal.getDishName())).append(',')
+                        .append(CsvUtils.escapeCsv(meal.getDishName())).append(',')
                         .append(meal.getQuantityGrams() != null ? meal.getQuantityGrams() : "").append(',')
                         .append(meal.getMealDate() != null ? meal.getMealDate().toString() : "").append('\n');
             }
@@ -88,14 +89,6 @@ public class MealController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to export meals: " + e.getMessage());
         }
-    }
-
-    private String escapeCsv(String value) {
-        if (value == null) return "";
-        String escaped = value.replace("\"", "\"\"");
-        return escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")
-                ? "\"" + escaped + "\""
-                : escaped;
     }
 
     @GetMapping("/{id}")

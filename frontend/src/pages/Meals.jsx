@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useData } from "../context/useData";
 import { mealsAPI } from "../services/api";
+import { downloadCsv } from "../utils/exportUtils";
 
 export default function Meals() {
     const { meals, addMeal } = useData();
@@ -10,27 +11,13 @@ export default function Meals() {
     const [error, setError] = useState("");
     const [exportError, setExportError] = useState("");
 
-    const downloadCsv = async (apiCall, filename) => {
-        try {
-            const response = await apiCall();
-            const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = filename;
-            document.body.appendChild(anchor);
-            anchor.click();
-            anchor.remove();
-            URL.revokeObjectURL(url);
-            setExportError("");
-        } catch (err) {
-            console.error('Failed to export meals', err);
-            setExportError('Unable to export meals. Please try again.');
-        }
-    };
-
     const handleExport = async () => {
-        await downloadCsv(mealsAPI.exportMeals, 'meals.csv');
+        downloadCsv(
+            mealsAPI.exportMeals,
+            'meals.csv',
+            () => setExportError(""),
+            (error) => setExportError(error)
+        );
     };
 
     const onSubmit = async (e) => {

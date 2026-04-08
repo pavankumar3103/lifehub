@@ -4,6 +4,7 @@ import com.lifehub.dto.*;
 import com.lifehub.model.User;
 import com.lifehub.repository.UserRepository;
 import com.lifehub.service.HabitService;
+import com.lifehub.util.CsvUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,7 +76,7 @@ public class HabitController {
             csv.append("Id,Habit Name,Active,Created At\n");
             for (HabitResponse habit : habits) {
                 csv.append(habit.getId() != null ? habit.getId() : "").append(',')
-                        .append(escapeCsv(habit.getHabitName())).append(',')
+                        .append(CsvUtils.escapeCsv(habit.getHabitName())).append(',')
                         .append(habit.getIsActive() != null && habit.getIsActive() ? "Yes" : "No").append(',')
                         .append(habit.getCreatedAt() != null ? habit.getCreatedAt().toString() : "").append('\n');
             }
@@ -88,14 +89,6 @@ public class HabitController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to export habits: " + e.getMessage());
         }
-    }
-
-    private String escapeCsv(String value) {
-        if (value == null) return "";
-        String escaped = value.replace("\"", "\"\"");
-        return escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")
-                ? "\"" + escaped + "\""
-                : escaped;
     }
 
     @GetMapping("/{id}")
