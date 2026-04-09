@@ -7,6 +7,16 @@ export default function Workouts() {
     const [name, setName] = useState("");
     const [duration, setDuration] = useState("");
     const [error, setError] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    const filteredWorkouts = workouts.filter(w => {
+        if (!w.workoutDate) return true;
+        const wDate = new Date(w.workoutDate).toISOString().slice(0,10);
+        if (startDate && wDate < startDate) return false;
+        if (endDate && wDate > endDate) return false;
+        return true;
+    });
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -50,7 +60,23 @@ export default function Workouts() {
                 </button>
             </div>
 
-            {workouts.length === 0 ? (
+            <div className="flex justify-start mb-2 mt-2">
+                <div className="flex gap-4 items-center bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 w-fit">
+                    <div className="flex flex-col">
+                        <label className="text-xs text-slate-500 mb-1">From</label>
+                        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-green-500" />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-xs text-slate-500 mb-1">To</label>
+                        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-green-500" />
+                    </div>
+                    {(startDate || endDate) && (
+                        <button onClick={() => {setStartDate(''); setEndDate('');}} className="text-slate-400 hover:text-white mt-5 text-sm underline">Clear</button>
+                    )}
+                </div>
+            </div>
+
+            {filteredWorkouts.length === 0 ? (
                 <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
                     <div className="text-6xl mb-4">💪</div>
                     <h3 className="text-2xl font-bold text-white mb-2">No workouts logged yet</h3>
@@ -64,7 +90,7 @@ export default function Workouts() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {workouts.map((w, idx) => (
+                    {filteredWorkouts.map((w, idx) => (
                         <div
                             key={w.id}
                             className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-700/50 hover:border-green-500/50 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"

@@ -16,14 +16,21 @@ export default function Habits() {
   const [currentHabit, setCurrentHabit] = useState(null);
   const [habitName, setHabitName] = useState('');
   const [formError, setFormError] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   const sortedHabits = useMemo(() => {
-    return [...habits].sort((a, b) => {
+    let filtered = habits;
+    if (statusFilter === 'Active') {
+      filtered = habits.filter(h => h.isActive);
+    } else if (statusFilter === 'Inactive') {
+      filtered = habits.filter(h => !h.isActive);
+    }
+    return [...filtered].sort((a, b) => {
       const aDate = new Date(a.createdAt ?? 0).getTime();
       const bDate = new Date(b.createdAt ?? 0).getTime();
       return bDate - aDate;
     });
-  }, [habits]);
+  }, [habits, statusFilter]);
 
   // Remove the problematic useEffect - DataContext already handles data fetching
   // The useEffect was causing infinite loops by calling refreshData repeatedly
@@ -124,6 +131,24 @@ export default function Habits() {
           </svg>
           Add Habit
         </button>
+      </div>
+
+      <div className="flex justify-start mb-2 mt-2">
+        <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+          {['All', 'Active', 'Inactive'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setStatusFilter(f)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                statusFilter === f
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </div>
 
       {sortedHabits.length === 0 ? (
