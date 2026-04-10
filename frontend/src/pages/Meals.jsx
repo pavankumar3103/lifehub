@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useData } from "../context/useData";
 
 export default function Meals() {
