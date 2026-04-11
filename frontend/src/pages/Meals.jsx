@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useData } from "../context/useData";
+import DateRangeFilter from "../components/DateRangeFilter";
 
 export default function Meals() {
     const { meals, addMeal } = useData();
@@ -9,14 +10,22 @@ export default function Meals() {
     const [error, setError] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredMeals = meals.filter(m => {
-        if (!m.mealDate) return true;
-        const mDate = new Date(m.mealDate).toISOString().slice(0,10);
-        if (startDate && mDate < startDate) return false;
-        if (endDate && mDate > endDate) return false;
-        return true;
-    });
+    const filteredMeals = useMemo(() => {
+        return meals.filter(m => {
+            if (searchQuery) {
+                const searchLower = searchQuery.toLowerCase();
+                const mealName = (m.dishName || m.name || "").toLowerCase();
+                if (!mealName.includes(searchLower)) return false;
+            }
+            if (!m.mealDate) return true;
+            const mDate = new Date(m.mealDate).toISOString().slice(0,10);
+            if (startDate && mDate < startDate) return false;
+            if (endDate && mDate > endDate) return false;
+            return true;
+        });
+    }, [meals, startDate, endDate, searchQuery]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -60,23 +69,26 @@ export default function Meals() {
                 </button>
             </div>
 
-            <div className="flex justify-start mb-2 mt-2">
-                <div className="flex gap-4 items-center bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 w-fit">
-                    <div className="flex flex-col">
-                        <label className="text-xs text-slate-500 mb-1">From</label>
-                        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-orange-500" />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="text-xs text-slate-500 mb-1">To</label>
-                        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-orange-500" />
-                    </div>
-                    {(startDate || endDate) && (
-                        <button onClick={() => {setStartDate(''); setEndDate('');}} className="text-slate-400 hover:text-white mt-5 text-sm underline">Clear</button>
-                    )}
+            <div className="flex flex-col gap-4 mb-2 mt-2">
+                <input
+                    type="text"
+                    placeholder="Search meals by name..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                />
+                <div className="flex justify-start">
+                    <DateRangeFilter
+                        startDate={startDate}
+                        endDate={endDate}
+                        setStartDate={setStartDate}
+                        setEndDate={setEndDate}
+                        focusBorderClass="focus:border-orange-500"
+                    />
                 </div>
             </div>
 
-            {filteredMeals.length === 0 ? (
+            {meals.length === 0 ? (
                 <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
                     <div className="text-6xl mb-4">🍽️</div>
                     <h3 className="text-2xl font-bold text-white mb-2">No meals tracked yet</h3>
@@ -86,6 +98,18 @@ export default function Meals() {
                         className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105"
                     >
                         Log Your First Meal
+                    </button>
+                </div>
+            ) : filteredMeals.length === 0 ? (
+                <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
+                    <div className="text-6xl mb-4">🔍</div>
+                    <h3 className="text-2xl font-bold text-white mb-2">No results match your filter</h3>
+                    <p className="text-slate-400 mb-6">Try adjusting your search or date range</p>
+                    <button
+                        onClick={() => {setSearchQuery(''); setStartDate(''); setEndDate('');}}
+                        className="bg-slate-700/50 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+                    >
+                        Clear Filters
                     </button>
                 </div>
             ) : (
