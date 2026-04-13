@@ -16,14 +16,26 @@ export default function Habits() {
   const [currentHabit, setCurrentHabit] = useState(null);
   const [habitName, setHabitName] = useState('');
   const [formError, setFormError] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const sortedHabits = useMemo(() => {
-    return [...habits].sort((a, b) => {
+    let filtered = habits;
+    if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      filtered = filtered.filter(h => (h.habitName || h.name || '').toLowerCase().includes(lowerQuery));
+    }
+    if (statusFilter === 'Active') {
+      filtered = filtered.filter(h => h.isActive);
+    } else if (statusFilter === 'Inactive') {
+      filtered = filtered.filter(h => !h.isActive);
+    }
+    return [...filtered].sort((a, b) => {
       const aDate = new Date(a.createdAt ?? 0).getTime();
       const bDate = new Date(b.createdAt ?? 0).getTime();
       return bDate - aDate;
     });
-  }, [habits]);
+  }, [habits, statusFilter, searchQuery]);
 
   // Remove the problematic useEffect - DataContext already handles data fetching
   // The useEffect was causing infinite loops by calling refreshData repeatedly
@@ -126,7 +138,34 @@ export default function Habits() {
         </button>
       </div>
 
-      {sortedHabits.length === 0 ? (
+      <div className="flex flex-col gap-4 mb-2 mt-2">
+        <input
+            type="text"
+            placeholder="Search habits by name..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+        />
+        <div className="flex justify-start">
+          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+          {['All', 'Active', 'Inactive'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setStatusFilter(f)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                statusFilter === f
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+        </div>
+      </div>
+
+      {habits.length === 0 ? (
         <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
           <div className="text-6xl mb-4">🧘‍♂️</div>
           <h3 className="text-2xl font-bold text-white mb-2">No habits yet</h3>
@@ -136,6 +175,18 @@ export default function Habits() {
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105"
           >
             Create Your First Habit
+          </button>
+        </div>
+      ) : sortedHabits.length === 0 ? (
+        <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
+          <div className="text-6xl mb-4">🔍</div>
+          <h3 className="text-2xl font-bold text-white mb-2">No results match your filter</h3>
+          <p className="text-slate-400 mb-6">Try adjusting your search or status filter</p>
+          <button
+            onClick={() => {setSearchQuery(''); setStatusFilter('All');}}
+            className="bg-slate-700/50 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+          >
+            Clear Filters
           </button>
         </div>
       ) : (

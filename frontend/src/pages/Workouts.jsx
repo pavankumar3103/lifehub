@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useData } from "../context/useData";
+import DateRangeFilter from "../components/DateRangeFilter";
 
 export default function Workouts() {
     const { workouts, addWorkout } = useData();
@@ -7,6 +8,24 @@ export default function Workouts() {
     const [name, setName] = useState("");
     const [duration, setDuration] = useState("");
     const [error, setError] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredWorkouts = useMemo(() => {
+        return workouts.filter(w => {
+            if (searchQuery) {
+                const searchLower = searchQuery.toLowerCase();
+                const exerciseName = (w.exerciseName || w.name || "").toLowerCase();
+                if (!exerciseName.includes(searchLower)) return false;
+            }
+            if (!w.workoutDate) return true;
+            const wDate = new Date(w.workoutDate).toISOString().slice(0,10);
+            if (startDate && wDate < startDate) return false;
+            if (endDate && wDate > endDate) return false;
+            return true;
+        });
+    }, [workouts, startDate, endDate, searchQuery]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -50,6 +69,25 @@ export default function Workouts() {
                 </button>
             </div>
 
+            <div className="flex flex-col gap-4 mb-2 mt-2">
+                <input
+                    type="text"
+                    placeholder="Search workouts by name..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                />
+                <div className="flex justify-start">
+                    <DateRangeFilter
+                        startDate={startDate}
+                        endDate={endDate}
+                        setStartDate={setStartDate}
+                        setEndDate={setEndDate}
+                        focusBorderClass="focus:border-green-500"
+                    />
+                </div>
+            </div>
+
             {workouts.length === 0 ? (
                 <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
                     <div className="text-6xl mb-4">💪</div>
@@ -62,9 +100,21 @@ export default function Workouts() {
                         Log Your First Workout
                     </button>
                 </div>
+            ) : filteredWorkouts.length === 0 ? (
+                <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-12 border border-slate-700/50 text-center">
+                    <div className="text-6xl mb-4">🔍</div>
+                    <h3 className="text-2xl font-bold text-white mb-2">No results match your filter</h3>
+                    <p className="text-slate-400 mb-6">Try adjusting your search or date range</p>
+                    <button
+                        onClick={() => {setSearchQuery(''); setStartDate(''); setEndDate('');}}
+                        className="bg-slate-700/50 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+                    >
+                        Clear Filters
+                    </button>
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {workouts.map((w, idx) => (
+                    {filteredWorkouts.map((w, idx) => (
                         <div
                             key={w.id}
                             className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-700/50 hover:border-green-500/50 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
