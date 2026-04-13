@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useData } from "../context/useData";
 import DateRangeFilter from "../components/DateRangeFilter";
 
