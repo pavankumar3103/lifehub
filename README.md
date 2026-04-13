@@ -1,5 +1,7 @@
 # LifeHub
 
+![CI](https://github.com/pavankumar3103/lifehub/actions/workflows/ci.yml/badge.svg)
+
 A full-stack personal wellness platform for tracking habits, meals, workouts, and mood — with analytics and intelligent recommendations.
 
 Built with Spring Boot 3.2 + React + PostgreSQL + Redis.
@@ -17,7 +19,10 @@ Built with Spring Boot 3.2 + React + PostgreSQL + Redis.
 - **Redis caching** — API response caching for performance
 - **Docker support** — single `docker-compose up` to run everything
 
----
+--- Images of Lifehub
+![Landing Page](docs/assets/landing.png)
+![Dashboard](docs/assets/dashboard.png)
+![Features](docs/assets/features.png)
 
 ## Tech Stack
 
