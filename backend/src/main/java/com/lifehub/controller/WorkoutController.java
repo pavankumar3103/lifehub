@@ -4,9 +4,11 @@ import com.lifehub.dto.*;
 import com.lifehub.model.User;
 import com.lifehub.repository.UserRepository;
 import com.lifehub.service.WorkoutService;
+import com.lifehub.util.CsvUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,31 @@ public class WorkoutController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("Failed to fetch workouts: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    public ResponseEntity<String> exportWorkouts(Authentication authentication) {
+        try {
+            Long userId = getUserId(authentication);
+            List<WorkoutResponse> workouts = workoutService.getUserWorkouts(userId);
+
+            StringBuilder csv = new StringBuilder();
+            csv.append("Id,Exercise Name,Duration Minutes,Workout Date\n");
+            for (WorkoutResponse workout : workouts) {
+                csv.append(workout.getId() != null ? workout.getId() : "").append(',')
+                        .append(CsvUtils.escapeCsv(workout.getExerciseName())).append(',')
+                        .append(workout.getDurationMinutes() != null ? workout.getDurationMinutes() : "").append(',')
+                        .append(workout.getWorkoutDate() != null ? workout.getWorkoutDate().toString() : "").append('\n');
+            }
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=workouts.csv")
+                    .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+                    .body(csv.toString());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to export workouts: " + e.getMessage());
         }
     }
 

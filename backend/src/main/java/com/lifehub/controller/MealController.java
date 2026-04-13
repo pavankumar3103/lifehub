@@ -4,9 +4,11 @@ import com.lifehub.dto.*;
 import com.lifehub.model.User;
 import com.lifehub.repository.UserRepository;
 import com.lifehub.service.MealService;
+import com.lifehub.util.CsvUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,31 @@ public class MealController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("Failed to fetch meals: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    public ResponseEntity<String> exportMeals(Authentication authentication) {
+        try {
+            Long userId = getUserId(authentication);
+            List<MealResponse> meals = mealService.getUserMeals(userId);
+
+            StringBuilder csv = new StringBuilder();
+            csv.append("Id,Dish Name,Quantity Grams,Meal Date\n");
+            for (MealResponse meal : meals) {
+                csv.append(meal.getId() != null ? meal.getId() : "").append(',')
+                        .append(CsvUtils.escapeCsv(meal.getDishName())).append(',')
+                        .append(meal.getQuantityGrams() != null ? meal.getQuantityGrams() : "").append(',')
+                        .append(meal.getMealDate() != null ? meal.getMealDate().toString() : "").append('\n');
+            }
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=meals.csv")
+                    .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+                    .body(csv.toString());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to export meals: " + e.getMessage());
         }
     }
 
