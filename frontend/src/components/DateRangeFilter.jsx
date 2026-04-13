@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function DateRangeFilter({ startDate, endDate, setStartDate, setEndDate, focusBorderClass = "focus:border-orange-500" }) {
     return (
         <div className="flex gap-4 items-center bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 w-fit">
