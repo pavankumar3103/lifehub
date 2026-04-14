@@ -4,7 +4,7 @@
 
 A full-stack personal wellness platform for tracking habits, meals, workouts, and mood — with analytics and intelligent recommendations.
 
-Built with Spring Boot 3.2 + React + PostgreSQL + Redis. 
+Built with Spring Boot 3.2 + React + PostgreSQL + Redis. Designed for extensibility, security, and performance.
 
 ---
 
