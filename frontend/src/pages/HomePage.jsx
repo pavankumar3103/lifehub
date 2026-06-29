@@ -303,7 +303,7 @@ const HomePage = () => {
                         <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-teal-500/20">
                             <div className="text-4xl mb-6">🌱</div>
                             <p className="italic text-slate-300 text-lg leading-relaxed mb-6">
-                                "Finally, a tool that focuses on growth and clarity rather than just busyness. It's changed how I see progress."
+                                "Finally, a tool that focuses on growth and clarity rather than just business. It's changed how I see progress."
                             </p>
                             <p className="font-semibold text-teal-400 text-lg">– John D.</p>
                         </div>

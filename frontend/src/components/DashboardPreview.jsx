@@ -156,7 +156,7 @@ export default function DashboardPreview() {
                 <h4 className="text-white font-semibold mb-3 text-sm flex items-center gap-2">
                     <span>📊</span> Analytics & Insights
                 </h4>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                     <div className="text-center p-3 rounded-lg bg-slate-600/30">
                         <div className="text-teal-400 text-lg font-bold">62%</div>
                         <div className="text-slate-400 text-xs">Active Rate</div>
@@ -167,7 +167,7 @@ export default function DashboardPreview() {
                     </div>
                     <div className="text-center p-3 rounded-lg bg-slate-600/30">
                         <div className="text-purple-400 text-lg font-bold">5</div>
-                        <div className="text-slate-400 text-xs">Recommendations</div>
+                        <div className="text-slate-400 text-xs truncate">Insights</div>
                     </div>
                 </div>
             </div>
