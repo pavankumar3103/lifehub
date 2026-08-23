@@ -2,6 +2,8 @@ package com.lifehub.service;
 
 import com.lifehub.dto.MealRequest;
 import com.lifehub.dto.MealResponse;
+import com.lifehub.kafka.ActivityEventType;
+import com.lifehub.kafka.UserActivityEventProducer;
 import com.lifehub.model.Meal;
 import com.lifehub.model.User;
 import com.lifehub.repository.MealRepository;
@@ -26,6 +28,9 @@ public class MealService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserActivityEventProducer activityEventProducer;
+
     @CacheEvict(value = "meals", key = "#userId", allEntries = true)
     public MealResponse createMeal(Long userId, MealRequest request) {
         User user = userRepository.findById(userId)
@@ -38,6 +43,9 @@ public class MealService {
         meal.setUser(user);
 
         Meal saved = mealRepository.save(meal);
+
+        activityEventProducer.publish(userId, ActivityEventType.MEAL_LOGGED, mapToResponse(saved));
+
         return mapToResponse(saved);
     }
 

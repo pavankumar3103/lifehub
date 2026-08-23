@@ -2,6 +2,8 @@ package com.lifehub.service;
 
 import com.lifehub.dto.MoodEntryRequest;
 import com.lifehub.dto.MoodEntryResponse;
+import com.lifehub.kafka.ActivityEventType;
+import com.lifehub.kafka.UserActivityEventProducer;
 import com.lifehub.model.MoodEntry;
 import com.lifehub.model.User;
 import com.lifehub.repository.MoodEntryRepository;
@@ -26,6 +28,9 @@ public class MoodEntryService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserActivityEventProducer activityEventProducer;
 
     @CacheEvict(value = "moodEntries", key = "#userId", allEntries = true)
     public MoodEntryResponse createMoodEntry(Long userId, MoodEntryRequest request) {
@@ -53,6 +58,9 @@ public class MoodEntryService {
         }
 
         MoodEntry saved = moodEntryRepository.save(moodEntry);
+
+        activityEventProducer.publish(userId, ActivityEventType.MOOD_LOGGED, mapToResponse(saved));
+
         return mapToResponse(saved);
     }
 

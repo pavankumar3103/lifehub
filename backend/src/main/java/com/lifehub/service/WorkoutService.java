@@ -2,6 +2,8 @@ package com.lifehub.service;
 
 import com.lifehub.dto.WorkoutRequest;
 import com.lifehub.dto.WorkoutResponse;
+import com.lifehub.kafka.ActivityEventType;
+import com.lifehub.kafka.UserActivityEventProducer;
 import com.lifehub.model.User;
 import com.lifehub.model.Workout;
 import com.lifehub.repository.UserRepository;
@@ -26,6 +28,9 @@ public class WorkoutService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserActivityEventProducer activityEventProducer;
+
     @CacheEvict(value = "workouts", key = "#userId", allEntries = true)
     public WorkoutResponse createWorkout(Long userId, WorkoutRequest request) {
         User user = userRepository.findById(userId)
@@ -38,6 +43,9 @@ public class WorkoutService {
         workout.setUser(user);
 
         Workout saved = workoutRepository.save(workout);
+
+        activityEventProducer.publish(userId, ActivityEventType.WORKOUT_LOGGED, mapToResponse(saved));
+
         return mapToResponse(saved);
     }
 
