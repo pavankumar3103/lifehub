@@ -10,7 +10,6 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleCacheManager;
@@ -58,7 +57,6 @@ public class RedisConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis", matchIfMissing = false)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory, ObjectMapper objectMapper) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);

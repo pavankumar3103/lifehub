@@ -68,6 +68,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-lifehub_dev}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.6-flash}
       JWT_SECRET: ${JWT_SECRET:-change-this-in-production-must-be-at-least-64-characters-long-for-hmac-sha512}
       JWT_EXPIRATION: 86400000
       JWT_REFRESH_EXPIRATION: 604800000
@@ -79,6 +82,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      redpanda:
+        condition: service_started
     restart: unless-stopped
 
   # ── React Frontend ─────────────────────────────────────────────────────────

@@ -11,4 +11,8 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: com.lifehub.kafka
-        spring.json.value.default.type: com.lifehub.kafka.UserActivityEvent
+
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: ${GEMINI_MODEL:gemini-3.6-flash}
+  base-url: https://generativelanguage.googleapis.com/v1beta
