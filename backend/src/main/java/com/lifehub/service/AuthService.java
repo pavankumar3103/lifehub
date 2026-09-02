@@ -92,6 +92,51 @@ public class AuthService {
                 user.getCreatedAt()
         );
     }
+
+    public UserResponse updateProfile(String email, UpdateProfileRequest request){
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (request.getName() != null && !request.getName().trim().isEmpty()) {
+            user.setName(request.getName().trim());
+        }
+
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty() &&
+            !request.getEmail().equals(user.getEmail())) {
+
+            if (request.getCurrentPassword() == null ||
+                    !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+                throw new RuntimeException("Current password is required to change email");
+            }
+
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new RuntimeException("Email already exists");
+            }
+
+            user.setEmail(request.getEmail().trim());
+        }
+
+        if (request.getNewPassword() != null && !request.getNewPassword().trim().isEmpty()) {
+
+            if (request.getCurrentPassword() == null ||
+                    !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+                throw new RuntimeException("Current password is incorrect");
+            }
+
+            user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        }
+
+        User updatedUser = userRepository.save(user);
+
+        return new UserResponse(
+                updatedUser.getId(),
+                updatedUser.getName(),
+                updatedUser.getEmail(),
+                updatedUser.getCreatedAt()
+        );
+
+    }
 }
 
 
